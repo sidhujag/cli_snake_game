@@ -98,3 +98,44 @@ def main():
 
 if __name__ == "__main__":
     main()
+import sys
+import tty
+import termios
+
+class SnakeGame:
+    def __init__(self):
+        self.snake_position = [(5, 5)]  # Initial snake position
+        self.food_position = (10, 10)   # Initial food position
+        self.direction = 'RIGHT'        # Initial direction
+        self.game_over = False
+
+    def read_input(self):
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+    def change_direction(self, key):
+        if key == 'w' and self.direction != 'DOWN':
+            self.direction = 'UP'
+        elif key == 's' and self.direction != 'UP':
+            self.direction = 'DOWN'
+        elif key == 'a' and self.direction != 'RIGHT':
+            self.direction = 'LEFT'
+        elif key == 'd' and self.direction != 'LEFT':
+            self.direction = 'RIGHT'
+
+    def game_loop(self):
+        while not self.game_over:
+            key = self.read_input()
+            self.change_direction(key)
+            # TODO: Implement the rest of the game logic
+            # Update snake position, check for collisions, place new food, etc.
+
+if __name__ == '__main__':
+    game = SnakeGame()
+    game.game_loop()
