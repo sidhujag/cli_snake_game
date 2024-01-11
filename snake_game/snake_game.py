@@ -1,78 +1,67 @@
 import random
 import curses
-from collections import deque
 
-class SnakeGame:
-    def __init__(self, width=20, height=20):
-        self.width = width
-        self.height = height
-        self.window = curses.newwin(height, width, 0, 0)
-        self.window.keypad(1)
-        self.window.timeout(100)
-        self.snake = deque([(height//2, width//4)])
-        self.snake_dir = curses.KEY_RIGHT
-        self.food = self.spawn_food()
-        self.score = 0
-
-    def spawn_food(self):
-        food = None
-        while food is None:
-            food = (random.randint(1, self.height-2), random.randint(1, self.width-2))
-            if food in self.snake:
-                food = None
-        return food
-
-    def render(self):
-        self.window.clear()
-        self.window.border(0)
-        self.window.addstr(0, 2, 'Score : ' + str(self.score) + ' ')
-        self.window.addch(self.food[0], self.food[1], '*')
-        for idx, part in enumerate(self.snake):
-            if idx == 0:
-                self.window.addch(part[0], part[1], '@')
-            else:
-                self.window.addch(part[0], part[1], '#')
-        self.window.refresh()
-
-    def update(self):
-        next_key = self.window.getch()
-        if next_key in [curses.KEY_RIGHT, curses.KEY_LEFT, curses.KEY_UP, curses.KEY_DOWN]:
-            self.snake_dir = next_key
-
-        head = self.snake[0]
-        if self.snake_dir == curses.KEY_RIGHT:
-            new_head = (head[0], head[1]+1)
-        elif self.snake_dir == curses.KEY_LEFT:
-            new_head = (head[0], head[1]-1)
-        elif self.snake_dir == curses.KEY_UP:
-            new_head = (head[0]-1, head[1])
-        elif self.snake_dir == curses.KEY_DOWN:
-            new_head = (head[0]+1, head[1])
-
-        self.snake.appendleft(new_head)
-        if self.snake[0] == self.food:
-            self.score += 1
-            self.food = self.spawn_food()
-        else:
-            self.snake.pop()
-
-        if (self.snake[0][0] in [0, self.height-1] or
-            self.snake[0][1]  in [0, self.width-1] or
-            self.snake[0] in list(self.snake)[1:]):
-            raise Exception("Game Over")
+def create_food(snake, box):
+    food = None
+    while food is None:
+        food = [random.randint(box[0][0]+1, box[1][0]-1), random.randint(box[0][1]+1, box[1][1]-1)]
+        if food in snake:
+            food = None
+    return food
 
 def main(stdscr):
     curses.curs_set(0)
-    game = SnakeGame()
+    stdscr.nodelay(1)
+    stdscr.timeout(100)
+
+    sh, sw = stdscr.getmaxyx()
+    box = [[3,3], [sh-3, sw-3]]
+    snake = [[sh//2, sw//2 + 1], [sh//2, sw//2], [sh//2, sw//2 - 1]]
+    direction = curses.KEY_RIGHT
+
+    for y, x in box:
+        stdscr.addch(y, x, '+')
+
+    food = create_food(snake, box)
+    stdscr.addch(food[0], food[1], '#')
+
+    score = 0
+
     while True:
-        game.render()
-        try:
-            game.update()
-        except Exception as e:
-            stdscr.addstr(game.height//2, game.width//2 - len(str(e))//2, str(e))
-            stdscr.refresh()
-            stdscr.getch()
+        next_key = stdscr.getch()
+        direction = direction if next_key == -1 else next_key
+
+        head = [snake[0][0], snake[0][1]]
+
+        if direction == curses.KEY_DOWN:
+            head[0] += 1
+        if direction == curses.KEY_UP:
+            head[0] -= 1
+        if direction == curses.KEY_LEFT:
+            head[1] -= 1
+        if direction == curses.KEY_RIGHT:
+            head[1] += 1
+
+        snake.insert(0, head)
+
+        if snake[0] == food:
+            score += 1
+            food = create_food(snake, box)
+            stdscr.addch(food[0], food[1], '#')
+        else:
+            tail = snake.pop()
+            stdscr.addch(tail[0], tail[1], ' ')
+
+        if (snake[0][0] in [box[0][0], box[1][0]] or
+            snake[0][1]  in [box[0][1], box[1][1]] or
+            snake[0] in snake[1:]):
             break
+
+        stdscr.addch(snake[0][0], snake[0][1], '*')
+
+    stdscr.addstr(sh//2, sw//2 - len("Game Over!")//2, "Game Over!")
+    stdscr.nodelay(0)
+    stdscr.getch()
 
 if __name__ == "__main__":
     curses.wrapper(main)
