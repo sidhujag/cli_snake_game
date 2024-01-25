@@ -1,57 +1,51 @@
-import sys
-import tty
-import termios
-import time
-from enum import Enum, auto
+import random
 
 # Define the possible directions
-class Direction(Enum):
-    UP = auto()
-    DOWN = auto()
-    LEFT = auto()
-    RIGHT = auto()
+DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
 
 # Initialize the game state
-class GameState:
-    def __init__(self):
-        self.snake = [(5, 5), (5, 4), (5, 3)]
-        self.direction = Direction.RIGHT
-        self.food = (10, 10)
-        self.width = 30
-        self.height = 20
-        self.score = 0
-        self.game_over = False
+def initialize_game(width=30, height=20):
+    snake = [(width // 2, height // 2)]
+    food = create_food(snake, width, height)
+    direction = 'RIGHT'
+    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
 
 # Function to get a keypress
-def get_keypress():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
+def create_food(snake, width, height):
+    while True:
+        food = (random.randint(1, width - 2), random.randint(1, height - 2))
+        if food not in snake:
+            return food
 
 # Function to update the game state
-def update_game_state(state):
-    head_x, head_y = state.snake[0]
-    if state.direction == Direction.UP:
-        head_y -= 1
-    elif state.direction == Direction.DOWN:
-        head_y += 1
-    elif state.direction == Direction.LEFT:
-        head_x -= 1
-    elif state.direction == Direction.RIGHT:
-        head_x += 1
+def move_snake(game_state):
+    head_x, head_y = game_state['snake'][0]
+    delta_x, delta_y = DIRECTIONS[game_state['direction']]
+    new_head = (head_x + delta_x, head_y + delta_y)
+    game_state['snake'].insert(0, new_head)
+    if new_head == game_state['food']:
+        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])
+    else:
+        game_state['snake'].pop()
 
-    # Check for game over conditions
-    if (head_x, head_y) in state.snake or head_x < 0 or head_y < 0 or head_x >= state.width or head_y >= state.height:
-        state.game_over = True
-        return
+def check_collision(game_state):
+    head = game_state['snake'][0]
+    # Check if the snake has hit the wall
+    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+        game_state['game_over'] = True
+    # Check if the snake has hit itself
+    if head in game_state['snake'][1:]:
+        game_state['game_over'] = True
 
-    # Move the snake
-    state.snake.insert(0, (head_x, head_y))
+def main():
+    game_state = initialize_game()
+    while not game_state['game_over']:
+        move_snake(game_state)
+        check_collision(game_state)
+        # TODO: Implement rendering and input handling
+        # render_game_state(game_state)
+        # handle_input(game_state)
+    print("Game Over!")
 
     # Check for food collision
     if (head_x, head_y) == state.food:
@@ -70,13 +64,24 @@ def update_game_state(state):
     elif state.direction == Direction.RIGHT:
         head_x += 1
 
-    # Check for game over conditions
-    if (head_x, head_y) in state.snake or head_x < 0 or head_y < 0 or head_x >= state.width or head_y >= state.height:
-        state.game_over = True
-        return
+def check_collision(game_state):
+    head = game_state['snake'][0]
+    # Check if the snake has hit the wall
+    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+        game_state['game_over'] = True
+    # Check if the snake has hit itself
+    if head in game_state['snake'][1:]:
+        game_state['game_over'] = True
 
-    # Move the snake
-    state.snake.insert(0, (head_x, head_y))
+def main():
+    game_state = initialize_game()
+    while not game_state['game_over']:
+        move_snake(game_state)
+        check_collision(game_state)
+        # TODO: Implement rendering and input handling
+        # render_game_state(game_state)
+        # handle_input(game_state)
+    print("Game Over!")
 
     # Check for food collision
     if (head_x, head_y) == state.food:
@@ -128,53 +133,25 @@ def handle_keypress(state, key):
 
 # Main game loop
 def main():
-    state = GameState()
-    while not state.game_over:
-        render_game_state(state)
-        key = get_keypress()
-        handle_keypress(state, key)
-        update_game_state(state)
-        time.sleep(0.1)  # Game tick rate
-        sys.stdout.write('\x1b[1;1H\x1b[2J')  # Clear the screen
-    print(f"Game Over! Your score was: {state.score}")
+    main()
 
 if __name__ == "__main__":
     main()
-    state = GameState()
-    while not state.game_over:
-        render_game_state(state)
-        key = get_keypress()
-        handle_keypress(state, key)
-        update_game_state(state)
-        time.sleep(0.1)  # Game tick rate
-        sys.stdout.write('\x1b[1;1H\x1b[2J')  # Clear the screen
-    print(f"Game Over! Your score was: {state.score}")
+    main()
 
 if __name__ == "__main__":
     main()
-import sys
-import tty
-import termios
-import time
-from enum import Enum, auto
+import random
 
 # Define the possible directions
-class Direction(Enum):
-    UP = auto()
-    DOWN = auto()
-    LEFT = auto()
-    RIGHT = auto()
+DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
 
 # Initialize the game state
-class GameState:
-    def __init__(self):
-        self.snake = [(5, 5), (5, 4), (5, 3)]
-        self.direction = Direction.RIGHT
-        self.food = (10, 10)
-        self.width = 30
-        self.height = 20
-        self.score = 0
-        self.game_over = False
+def initialize_game(width=30, height=20):
+    snake = [(width // 2, height // 2)]
+    food = create_food(snake, width, height)
+    direction = 'RIGHT'
+    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
 
 class SnakeGame:
     def __init__(self):
