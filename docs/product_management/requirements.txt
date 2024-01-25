@@ -1,1 +1,6 @@
 Requirements: Detail the top 5 requirements with priorities (P0, P1, P2).
+1. P0 - Real-time Keyboard Input: The game must accurately and immediately respond to keyboard input for controlling the snake.
+2. P0 - Robust Collision Detection: Implement precise collision detection to handle the snake's interaction with the game boundaries and itself.
+3. P0 - Score Tracking and Display: The game should keep track of the player's score and display it in real-time during gameplay.
+4. P1 - Pause/Resume Functionality: Allow the player to pause and resume the game, providing a better user experience.
+5. P2 - High Score Management: Maintain a high score record that persists between game sessions.
