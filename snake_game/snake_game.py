@@ -9,8 +9,7 @@ def create_food(snake, box):
             food = None
     return food
 
-def main(stdscr):
-    # Initialization
+def initialize_game(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(1)
     stdscr.timeout(100)
@@ -19,72 +18,56 @@ def main(stdscr):
     box = [[3,3], [sh-3, sw-3]]
     snake = [[sh//2, sw//2 + 1], [sh//2, sw//2], [sh//2, sw//2 - 1]]
     direction = curses.KEY_RIGHT
-
-    for y, x in box:
-        stdscr.addch(y, x, '+')
-
-    food = create_food(snake, box)  # Initial food placement
-    # Draw game border
-    for y in range(box[0][0], box[1][0]):
-        for x in range(box[0][1], box[1][1]):
-            if y in [box[0][0], box[1][0]-1] or x in [box[0][1], box[1][1]-1]:
-                stdscr.addch(y, x, '+')
-
-    # Initial food placement
     food = create_food(snake, box)
-    stdscr.addch(food[0], food[1], '#')
-
     score = 0
+    return {'stdscr': stdscr, 'box': box, 'snake': snake, 'direction': direction, 'food': food, 'score': score, 'game_over': False}
 
-    # Game loop
-    while True:
-        # Input handling
-    while True:
+def render_score(stdscr, score):
+    score_text = 'Score: {}'.format(score)
+    stdscr.addstr(1, 2, score_text)
+
+def game_loop(game_state):
+    while not game_state['game_over']:
+        stdscr = game_state['stdscr']
+        stdscr.clear()
+        render_score(stdscr, game_state['score'])
         next_key = stdscr.getch()
-        direction = direction if next_key == -1 else next_key
+        handle_input(game_state, next_key)
+        update_snake_position(game_state)
+        check_collisions(game_state)
+        update_food(game_state)
+        render_game_state(game_state)
+        stdscr.refresh()
+        if game_state['game_over']:
+            handle_game_over(stdscr)
 
-        # Snake movement
-        head = [snake[0][0], snake[0][1]]
+def handle_input(game_state, key):
+    # TODO: Implement the logic to change the direction based on the key
+    pass
 
-        # Direction handling
-        if direction == curses.KEY_DOWN:
-            head[0] += 1
-        if direction == curses.KEY_UP:
-            head[0] -= 1
-        if direction == curses.KEY_LEFT:
-            head[1] -= 1
-        if direction == curses.KEY_RIGHT:
-            head[1] += 1
+def update_snake_position(game_state):
+    # TODO: Implement the logic to update the snake's position
+    pass
 
-        # Insert new head
-        snake.insert(0, head)
+def check_collisions(game_state):
+    # TODO: Implement the logic to check for collisions
+    pass
 
-        # Food consumption
-        if snake[0] == food:
-            score += 1
-            food = create_food(snake, box)
-            food = create_food(snake, box)  # Place new food
-            stdscr.addch(food[0], food[1], '#')
-        else:
-            # Move snake
-            tail = snake.pop()
-            stdscr.addch(tail[0], tail[1], ' ')
+def update_food(game_state):
+    # TODO: Implement the logic to update the food position if consumed
+    pass
 
-        if (snake[0][0] in [box[0][0], box[1][0]] or
-            snake[0][1]  in [box[0][1], box[1][1]] or
-        # Collision detection
-        if (snake[0][0] in [box[0][0], box[1][0]-1] or
-            snake[0][1]  in [box[0][1], box[1][1]-1] or
-            snake[0] in snake[1:]):
-            break
+def render_game_state(game_state):
+    # TODO: Implement the logic to render the snake, food, and walls
+    pass
 
-        # Render snake
-        stdscr.addch(snake[0][0], snake[0][1], '*')
+def handle_game_over(stdscr):
+    # TODO: Implement the logic to handle the game over state
+    pass
 
-    # Game over message
-    stdscr.addstr(sh//2, sw//2 - len("Game Over!")//2, "Game Over!")
-    stdscr.nodelay(0)
-    stdscr.getch()
+def main(stdscr):
+    game_state = initialize_game(stdscr)
+    game_loop(game_state)
 
 if __name__ == "__main__":
     curses.wrapper(main)
@@ -122,21 +105,17 @@ def main(stdscr):
         next_key = stdscr.getch()
         direction = direction if next_key == -1 else next_key
 
-        # Snake movement
-        head = [snake[0][0], snake[0][1]]
+def update_food(game_state):
+    # TODO: Implement the logic to update the food position if consumed
+    pass
 
-        # Direction handling
-        if direction == curses.KEY_DOWN:
-            head[0] += 1
-        if direction == curses.KEY_UP:
-            head[0] -= 1
-        if direction == curses.KEY_LEFT:
-            head[1] -= 1
-        if direction == curses.KEY_RIGHT:
-            head[1] += 1
+def render_game_state(game_state):
+    # TODO: Implement the logic to render the snake, food, and walls
+    pass
 
-        # Insert new head
-        snake.insert(0, head)
+def handle_game_over(stdscr):
+    # TODO: Implement the logic to handle the game over state
+    pass
 
         if snake[0] == food:
             food = create_food(snake, box)
