@@ -2,3 +2,7 @@ Product Goals:
 1. Create a simple and intuitive CLI-based snake game
 2. Ensure the game is responsive and registers user input accurately
 3. Design the game for ease of maintenance and potential future upgrades, such as a graphical interface
+Product Goals:
+1. Create a simple and intuitive CLI-based snake game
+2. Ensure the game is responsive and registers user input accurately
+3. Design the game for ease of maintenance and potential future upgrades, such as a graphical interface
