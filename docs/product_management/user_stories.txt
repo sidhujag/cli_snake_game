@@ -1,14 +1,11 @@
 User Stories:
 
-1. As a casual gamer, I want to quickly start a game of snake without complex setup, so that I can enjoy a short gaming session during my break.
+1. As a player who has limited time, I want to be able to quickly start a new game with a single command, so that I can maximize my enjoyment without a lengthy setup process.
 
-2. As a competitive player, I want to see my score increase as I play, so that I can aim to beat my high score with each new game.
+2. As a player seeking challenge, I want the game to progressively increase in difficulty as my score gets higher, so that I can be continuously challenged and engaged.
 
-3. As a nostalgic user, I want the snake game to have a simple and retro feel, similar to the classic game I played on my old mobile phone.
+3. As a player who enjoys social gaming, I want to be able to share my high score on social media, so that I can compete with friends and show off my achievements.
 
-4. As a busy individual, I want the ability to pause and resume the game, so that I can handle interruptions without losing my progress.
+4. As a visually impaired user, I want the game to have audio cues that help me understand the game state, so that I can enjoy playing without relying on the visual interface.
 
-5. As a gamer who enjoys progression, I want the game to save my high score, so that I can have a long-term goal to work towards.
-6. As a player, I want to see my score update in real-time as I play the game, so that I can get immediate feedback on my performance.
-7. As a user with frequent interruptions, I want to be able to pause and resume my game, so that I can manage my time and breaks without losing my progress.
-8. As a competitive player, I want the game to remember and display my high score even after I close the game, so that I can have a record of my achievements and motivation to improve.
+5. As a player who enjoys customization, I want to be able to change the appearance of the snake and the game board, so that I can personalize my gaming experience.
