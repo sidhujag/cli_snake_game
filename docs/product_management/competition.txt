@@ -1,1 +1,27 @@
-Competitive Analysis: List 5-7 competitors and analyze their offerings.
+Competitive Analysis: 1. Classic Snake Game (Various Platforms)
+   - Pros: Widely recognized and nostalgic gameplay.
+   - Cons: Often lacks modern features and updates.
+
+2. Snake Game by Google (Google Search "Play Snake")
+   - Pros: Easily accessible through Google search, no installation required.
+   - Cons: Limited to basic gameplay, no advanced features.
+
+3. Terminal Snake (Open Source CLI Snake Game)
+   - Pros: Open source, customizable, and runs in various terminal environments.
+   - Cons: User experience might vary depending on the terminal used.
+
+4. Nibbles (Older DOS-based Game)
+   - Pros: Simple mechanics, part of early personal computing history.
+   - Cons: Outdated graphics and not readily accessible on modern systems.
+
+5. Cool Retro Term Snake Game (Modern Terminal with Retro Feel)
+   - Pros: Combines classic gameplay with a retro terminal aesthetic.
+   - Cons: More of a novelty, might not appeal to all users.
+
+6. Powerline Snake (CLI Game with Powerline Fonts)
+   - Pros: Unique visual style using Powerline fonts.
+   - Cons: Requires specific font support, which might not be available on all systems.
+
+7. Bash Snake (Bash Script-based Snake Game)
+   - Pros: Runs in any system with Bash, no need for additional languages.
+   - Cons: Limited by Bash's capabilities, potentially less smooth gameplay.
