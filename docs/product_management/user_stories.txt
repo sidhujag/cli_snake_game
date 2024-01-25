@@ -1,1 +1,11 @@
-User Stories: Describe 3-5 scenarios highlighting user interactions with the product.
+User Stories:
+
+1. As a casual gamer, I want to quickly start a game of snake without complex setup, so that I can enjoy a short gaming session during my break.
+
+2. As a competitive player, I want to see my score increase as I play, so that I can aim to beat my high score with each new game.
+
+3. As a nostalgic user, I want the snake game to have a simple and retro feel, similar to the classic game I played on my old mobile phone.
+
+4. As a busy individual, I want the ability to pause and resume the game, so that I can handle interruptions without losing my progress.
+
+5. As a gamer who enjoys progression, I want the game to save my high score, so that I can have a long-term goal to work towards.
