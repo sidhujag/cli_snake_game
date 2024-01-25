@@ -1,3 +1,4 @@
+import random
 class Game:
     def __init__(self, width, height):
         self.width = width
@@ -9,7 +10,6 @@ class Game:
         self.place_food()
 
     def place_food(self):
-        import random
         while True:
             self.food = (random.randint(1, self.width - 2), random.randint(1, self.height - 2))
             if self.food not in self.snake:
