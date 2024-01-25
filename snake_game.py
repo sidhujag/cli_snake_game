@@ -1,34 +1,39 @@
 import random
+import curses
 
 # Define the possible directions
-DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+DIRECTIONS = {'UP': (-1, 0), 'DOWN': (1, 0), 'LEFT': (0, -1), 'RIGHT': (0, 1)}
 
 # Initialize the game state
-def initialize_game(width=30, height=20):
-    snake = [(width // 2, height // 2)]
-    food = create_food(snake, width, height)
-    direction = 'RIGHT'
-    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
+def initialize_game(stdscr):
+    curses.curs_set(0)
+    stdscr.nodelay(1)
+    stdscr.timeout(100)
 
-# Function to get a keypress
-def create_food(snake, width, height):
+    sh, sw = stdscr.getmaxyx()
+    box = [[3, 3], [sh - 3, sw - 3]]
+    snake = [[sh // 2, sw // 2 + 1], [sh // 2, sw // 2], [sh // 2, sw // 2 - 1]]
+    direction = 'RIGHT'
+    food = create_food(snake, box)
+    score = 0
+    return {'stdscr': stdscr, 'box': box, 'snake': snake, 'direction': direction, 'food': food, 'score': score}
+
+# Function to create food at a random location
+def create_food(snake, box):
     while True:
-        food = (random.randint(1, width - 2), random.randint(1, height - 2))
+        food = [random.randint(box[0][0] + 1, box[1][0] - 2), random.randint(box[0][1] + 1, box[1][1] - 2)]
         if food not in snake:
             return food
 
 # Function to update the game state
-def move_snake(game_state):
-    head_x, head_y = game_state['snake'][0]
-    delta_x, delta_y = DIRECTIONS[game_state['direction']]
-    new_head = (head_x + delta_x, head_y + delta_y)
-    game_state['snake'].insert(0, new_head)
-    if new_head != game_state['food']:
-        game_state['snake'].pop()  # Remove the tail segment if no food is consumed
-    # Food is consumed
-    else:
-        game_state['score'] += 1  # Increase score
-        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])  # Create new food
+def game_loop(game_state):
+    while True:
+        stdscr = game_state['stdscr']
+        stdscr.clear()
+        for y, x in game_state['snake']:
+            stdscr.addch(y, x, '#')
+        stdscr.addch(game_state['food'][0], game_state['food'][1], '*')
+        stdscr.refresh()
 
 def check_collision(game_state):
     head = game_state['snake'][0]
@@ -101,17 +106,16 @@ def main():
     else:
         state.snake.pop()
 
-# Function to render the game state
-def render_game_state(state):
-    for y in range(state.height):
-        for x in range(state.width):
-            if (x, y) == state.food:
-                sys.stdout.write('F')
-            elif (x, y) in state.snake:
-                sys.stdout.write('*')
-            else:
-                sys.stdout.write(' ')
-        sys.stdout.write('\n')
+        key = stdscr.getch()
+        direction = game_state['direction']
+        if key == curses.KEY_UP and direction != 'DOWN':
+            direction = 'UP'
+        elif key == curses.KEY_DOWN and direction != 'UP':
+            direction = 'DOWN'
+        elif key == curses.KEY_LEFT and direction != 'RIGHT':
+            direction = 'LEFT'
+        elif key == curses.KEY_RIGHT and direction != 'LEFT':
+            direction = 'RIGHT'
     for y in range(state.height):
         for x in range(state.width):
             if (x, y) == state.food:
@@ -122,16 +126,9 @@ def render_game_state(state):
                 sys.stdout.write(' ')
         sys.stdout.write('\n')
 
-# Function to handle keypresses and change direction
-def handle_keypress(state, key):
-    if key == 'w' and state.direction != Direction.DOWN:
-        state.direction = Direction.UP
-    elif key == 's' and state.direction != Direction.UP:
-        state.direction = Direction.DOWN
-    elif key == 'a' and state.direction != Direction.RIGHT:
-        state.direction = Direction.LEFT
-    elif key == 'd' and state.direction != Direction.LEFT:
-        state.direction = Direction.RIGHT
+        head = game_state['snake'][0]
+        dy, dx = DIRECTIONS[direction]
+        new_head = [head[0] + dy, head[1] + dx]
     if key == 'w' and state.direction != Direction.DOWN:
         state.direction = Direction.UP
     elif key == 's' and state.direction != Direction.UP:
@@ -141,27 +138,55 @@ def handle_keypress(state, key):
     elif key == 'd' and state.direction != Direction.LEFT:
         state.direction = Direction.RIGHT
 
-# Main game loop
+        # Check for game over conditions
+        if (new_head in game_state['snake'] or
+            new_head[0] in [box[0][0], box[1][0]] or
+            new_head[1] in [box[0][1], box[1][1]]):
+            msg = "Game Over! Score: {}".format(game_state['score'])
+            stdscr.addstr(sh // 2, sw // 2 - len(msg) // 2, msg)
+            stdscr.nodelay(0)
+            stdscr.getch()
+            break
+
+        game_state['snake'].insert(0, new_head)
+
+        # Check if new head position is the same as the food
+        if new_head == game_state['food']:
+            game_state['score'] += 1
+            game_state['food'] = create_food(game_state['snake'], game_state['box'])
+        else:
+            game_state['snake'].pop()
+
+        game_state['direction'] = direction
+
 def main():
+    curses.wrapper(initialize_game)
+
+if __name__ == "__main__":
     main()
 
 if __name__ == "__main__":
     main()
-    main()
 
-if __name__ == "__main__":
-    main()
 import random
+import curses
 
 # Define the possible directions
-DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+DIRECTIONS = {'UP': (-1, 0), 'DOWN': (1, 0), 'LEFT': (0, -1), 'RIGHT': (0, 1)}
 
 # Initialize the game state
-def initialize_game(width=30, height=20):
-    snake = [(width // 2, height // 2)]
-    food = create_food(snake, width, height)
+def initialize_game(stdscr):
+    curses.curs_set(0)
+    stdscr.nodelay(1)
+    stdscr.timeout(100)
+
+    sh, sw = stdscr.getmaxyx()
+    box = [[3, 3], [sh - 3, sw - 3]]
+    snake = [[sh // 2, sw // 2 + 1], [sh // 2, sw // 2], [sh // 2, sw // 2 - 1]]
     direction = 'RIGHT'
-    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
+    food = create_food(snake, box)
+    score = 0
+    return {'stdscr': stdscr, 'box': box, 'snake': snake, 'direction': direction, 'food': food, 'score': score}
 
 class SnakeGame:
     def __init__(self):
@@ -200,6 +225,7 @@ class SnakeGame:
 if __name__ == '__main__':
     game = SnakeGame()
     game.game_loop()
+
 import random
 import curses
 
@@ -267,6 +293,7 @@ def main(stdscr):
 
 if __name__ == "__main__":
     curses.wrapper(main)
+
 import random
 import curses
 
@@ -332,6 +359,7 @@ def game(stdscr):
 
 if __name__ == "__main__":
     curses.wrapper(game)
+
 import random
 import curses
 
@@ -393,6 +421,7 @@ def main(stdscr):
         stdscr.addch(snake[0][0], snake[0][1], '#')
 
 curses.wrapper(main)
+
 import random
 import curses
 
@@ -454,37 +483,43 @@ def main(stdscr):
         stdscr.addch(snake[0][0], snake[0][1], '#')
 
 curses.wrapper(main)
+
 import random
+import curses
 
 # Define the possible directions
-DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+DIRECTIONS = {'UP': (-1, 0), 'DOWN': (1, 0), 'LEFT': (0, -1), 'RIGHT': (0, 1)}
 
 # Initialize the game state
-def initialize_game(width=30, height=20):
-    snake = [(width // 2, height // 2)]
-    food = create_food(snake, width, height)
-    direction = 'RIGHT'
-    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
+def initialize_game(stdscr):
+    curses.curs_set(0)
+    stdscr.nodelay(1)
+    stdscr.timeout(100)
 
-# Function to get a keypress
-def create_food(snake, width, height):
+    sh, sw = stdscr.getmaxyx()
+    box = [[3, 3], [sh - 3, sw - 3]]
+    snake = [[sh // 2, sw // 2 + 1], [sh // 2, sw // 2], [sh // 2, sw // 2 - 1]]
+    direction = 'RIGHT'
+    food = create_food(snake, box)
+    score = 0
+    return {'stdscr': stdscr, 'box': box, 'snake': snake, 'direction': direction, 'food': food, 'score': score}
+
+# Function to create food at a random location
+def create_food(snake, box):
     while True:
-        food = (random.randint(1, width - 2), random.randint(1, height - 2))
+        food = [random.randint(box[0][0] + 1, box[1][0] - 2), random.randint(box[0][1] + 1, box[1][1] - 2)]
         if food not in snake:
             return food
 
 # Function to update the game state
-def move_snake(game_state):
-    head_x, head_y = game_state['snake'][0]
-    delta_x, delta_y = DIRECTIONS[game_state['direction']]
-    new_head = (head_x + delta_x, head_y + delta_y)
-    game_state['snake'].insert(0, new_head)
-    if new_head != game_state['food']:
-        game_state['snake'].pop()  # Remove the tail segment if no food is consumed
-    # Food is consumed
-    else:
-        game_state['score'] += 1  # Increase score
-        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])  # Create new food
+def game_loop(game_state):
+    while True:
+        stdscr = game_state['stdscr']
+        stdscr.clear()
+        for y, x in game_state['snake']:
+            stdscr.addch(y, x, '#')
+        stdscr.addch(game_state['food'][0], game_state['food'][1], '*')
+        stdscr.refresh()
 
 def check_collision(game_state):
     head = game_state['snake'][0]
@@ -511,6 +546,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 import random
 import curses
 
@@ -580,6 +616,7 @@ def main(stdscr):
 
 if __name__ == '__main__':
     curses.wrapper(main)
+
 import random
 import curses
 
@@ -684,4 +721,3 @@ def handle_input(game_state):
             game_state['direction'] = 'RIGHT'
         elif key == 'p':
             game_state['paused'] = not game_state['paused']  # Toggle pause
-
