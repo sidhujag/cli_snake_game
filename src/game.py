@@ -1,5 +1,5 @@
 import random
-import random
+
 class Game:
     def __init__(self, width, height):
         self.width = width
@@ -50,18 +50,26 @@ class Game:
         self.score += 1
 
     def run(self, input_handler, renderer):
-        from time import sleep
+        import time
 
         try:
             with input_handler as ih:
                 while True:
                     # Render the game state
-                    renderer.render()
+                    try:
+                        renderer.render()
+                    except Exception as e:
+                        print(f"Render error: {e}")
+                        break
 
                     # Read input
-                    key = ih.read_input()
-                    if key:
-                        self.change_direction(key)
+                    try:
+                        key = ih.read_input()
+                        if key:
+                            self.change_direction(key)
+                    except Exception as e:
+                        print(f"Input error: {e}")
+                        break
 
                     # Move the snake
                     self.move_snake()
@@ -69,9 +77,10 @@ class Game:
                     # Check for collisions
                     if self.check_collision():
                         renderer.game_over()
+                        renderer.game_over()
                         break
 
                     # Sleep to control game speed
-                    sleep(0.1)
+                    time.sleep(renderer.game_speed)
         finally:
             ih.restore_input()
