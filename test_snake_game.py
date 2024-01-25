@@ -63,3 +63,32 @@ class TestSnakeGame(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+import unittest
+from unittest.mock import patch
+from snake_game import create_food
+
+class TestCreateFood(unittest.TestCase):
+    def test_create_food_not_in_snake(self):
+        snake = [(5, 5), (5, 4), (5, 3)]
+        box = [(1, 1), (10, 10)]
+        with patch('snake_game.random.randint', side_effect=[6, 6]):
+            food = create_food(snake, box)
+            self.assertNotIn(food, snake, "The food should not be placed on the snake's body.")
+
+    def test_create_food_within_boundaries(self):
+        snake = [(5, 5), (5, 4), (5, 3)]
+        box = [(1, 1), (10, 10)]
+        with patch('snake_game.random.randint', side_effect=[6, 6]):
+            food = create_food(snake, box)
+            self.assertTrue(box[0][0] <= food[0] <= box[1][0], "Food's x-coordinate is out of horizontal boundaries.")
+            self.assertTrue(box[0][1] <= food[1] <= box[1][1], "Food's y-coordinate is out of vertical boundaries.")
+
+    def test_create_food_retries_when_in_snake(self):
+        snake = [(5, 5), (5, 4), (5, 3)]
+        box = [(1, 1), (10, 10)]
+        with patch('snake_game.random.randint', side_effect=[5, 5, 6, 6]):
+            food = create_food(snake, box)
+            self.assertEqual(food, [6, 6], "The food should be placed at a new location if the first is occupied by the snake.")
+
+if __name__ == '__main__':
+    unittest.main()
