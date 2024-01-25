@@ -2,7 +2,13 @@ Product Goals:
 1. Develop a user-friendly command-line interface for the snake game that prioritizes ease of use and simplicity.
 2. Implement real-time input handling to ensure a smooth and responsive gaming experience.
 3. Architect the game with modularity and extensibility in mind to facilitate future enhancements, including the addition of a graphical user interface.
+4. Design and implement a real-time score display that updates immediately as the player earns points.
+5. Create a pause/resume functionality that allows players to temporarily halt the game and resume it without losing progress.
+6. Develop a high score management system that records and displays the player's highest score between sessions.
 Product Goals:
 1. Develop a user-friendly command-line interface for the snake game that prioritizes ease of use and simplicity.
 2. Implement real-time input handling to ensure a smooth and responsive gaming experience.
 3. Architect the game with modularity and extensibility in mind to facilitate future enhancements, including the addition of a graphical user interface.
+4. Design and implement a real-time score display that updates immediately as the player earns points.
+5. Create a pause/resume functionality that allows players to temporarily halt the game and resume it without losing progress.
+6. Develop a high score management system that records and displays the player's highest score between sessions.
