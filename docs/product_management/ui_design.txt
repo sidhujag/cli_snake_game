@@ -1,1 +1,27 @@
-UI Design Draft: Describe UI elements, functions, style, and layout.
+UI Design Draft:
+
+UI Elements:
+- Game Board: A grid that represents the playing field where the snake moves.
+- Snake: A line of characters that grows in length each time it consumes food.
+- Food: A special character that appears randomly on the game board and is consumed by the snake.
+- Score: A section of the screen that displays the current score of the player.
+- Game Over Screen: A message that appears when the game ends, showing the final score and a prompt to play again or exit.
+
+Functions:
+- Initialize Game: Set up the game board, place the initial snake and food, and set the score to zero.
+- Move Snake: Update the snake's position based on user input.
+- Check Collision: Determine if the snake has collided with the game board boundaries or itself.
+- Generate Food: Place a new food item on the board when the previous one is consumed.
+- Update Score: Increase the score when the snake consumes food.
+- End Game: Display the Game Over Screen when a collision is detected.
+
+Style:
+- The game will use a simple and clean text-based interface.
+- The snake can be represented by a series of 'O' characters, and the food by an 'X'.
+- The game board will be bordered by a set of '-' and '|' characters.
+- The score will be displayed in plain text at the top or bottom of the game board.
+
+Layout:
+- The game board will be centered in the terminal window.
+- The score will be displayed at the top of the game board.
+- The Game Over Screen will clear the game board and display the message in the center of the terminal.
