@@ -17,8 +17,10 @@ class InputHandler:
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
 
     def read_input(self):
-        # Read single character without pressing enter
-        return sys.stdin.read(1)
+        try:
+            return sys.stdin.read(1)
+        except (IOError, TypeError):
+            return None
 
     def signal_handler(self, signum, frame):
         # Handle any cleanup on unexpected exit
