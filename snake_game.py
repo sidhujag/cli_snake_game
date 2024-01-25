@@ -23,15 +23,17 @@ def move_snake(game_state):
     delta_x, delta_y = DIRECTIONS[game_state['direction']]
     new_head = (head_x + delta_x, head_y + delta_y)
     game_state['snake'].insert(0, new_head)
-    if new_head == game_state['food']:
-        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])
+    if new_head != game_state['food']:
+        game_state['snake'].pop()  # Remove the tail segment if no food is consumed
+    # Food is consumed
     else:
-        game_state['snake'].pop()
+        game_state['score'] += 1  # Increase score
+        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])  # Create new food
 
 def check_collision(game_state):
     head = game_state['snake'][0]
     # Check if the snake has hit the wall
-    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+    if head[0] <= 0 or head[0] >= game_state['width'] or head[1] <= 0 or head[1] >= game_state['height']:
         game_state['game_over'] = True
     # Check if the snake has hit itself
     if head in game_state['snake'][1:]:
@@ -40,11 +42,15 @@ def check_collision(game_state):
 def main():
     game_state = initialize_game()
     while not game_state['game_over']:
+        if not game_state.get('paused', False):
         move_snake(game_state)
         check_collision(game_state)
         # TODO: Implement rendering and input handling
         # render_game_state(game_state)
         # handle_input(game_state)
+            render_game_state(game_state)
+            handle_input(game_state)
+        time.sleep(0.1)  # Add a small delay to make the game playable
     print("Game Over!")
 
     # Check for food collision
@@ -67,7 +73,7 @@ def main():
 def check_collision(game_state):
     head = game_state['snake'][0]
     # Check if the snake has hit the wall
-    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+    if head[0] <= 0 or head[0] >= game_state['width'] or head[1] <= 0 or head[1] >= game_state['height']:
         game_state['game_over'] = True
     # Check if the snake has hit itself
     if head in game_state['snake'][1:]:
@@ -76,11 +82,15 @@ def check_collision(game_state):
 def main():
     game_state = initialize_game()
     while not game_state['game_over']:
+        if not game_state.get('paused', False):
         move_snake(game_state)
         check_collision(game_state)
         # TODO: Implement rendering and input handling
         # render_game_state(game_state)
         # handle_input(game_state)
+            render_game_state(game_state)
+            handle_input(game_state)
+        time.sleep(0.1)  # Add a small delay to make the game playable
     print("Game Over!")
 
     # Check for food collision
@@ -469,15 +479,17 @@ def move_snake(game_state):
     delta_x, delta_y = DIRECTIONS[game_state['direction']]
     new_head = (head_x + delta_x, head_y + delta_y)
     game_state['snake'].insert(0, new_head)
-    if new_head == game_state['food']:
-        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])
+    if new_head != game_state['food']:
+        game_state['snake'].pop()  # Remove the tail segment if no food is consumed
+    # Food is consumed
     else:
-        game_state['snake'].pop()
+        game_state['score'] += 1  # Increase score
+        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])  # Create new food
 
 def check_collision(game_state):
     head = game_state['snake'][0]
     # Check if the snake has hit the wall
-    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+    if head[0] <= 0 or head[0] >= game_state['width'] or head[1] <= 0 or head[1] >= game_state['height']:
         game_state['game_over'] = True
     # Check if the snake has hit itself
     if head in game_state['snake'][1:]:
@@ -486,11 +498,15 @@ def check_collision(game_state):
 def main():
     game_state = initialize_game()
     while not game_state['game_over']:
+        if not game_state.get('paused', False):
         move_snake(game_state)
         check_collision(game_state)
         # TODO: Implement rendering and input handling
         # render_game_state(game_state)
         # handle_input(game_state)
+            render_game_state(game_state)
+            handle_input(game_state)
+        time.sleep(0.1)  # Add a small delay to make the game playable
     print("Game Over!")
 
 if __name__ == "__main__":
@@ -642,3 +658,30 @@ def main():
 
 if __name__ == "__main__":
     main()
+def render_game_state(game_state):
+    os.system('cls' if os.name == 'nt' else 'clear')  # Clear the screen
+    for y in range(game_state['height']):
+        for x in range(game_state['width']):
+            if (x, y) == game_state['food']:
+                sys.stdout.write('F')
+            elif (x, y) in game_state['snake']:
+                sys.stdout.write('*')
+            else:
+                sys.stdout.write(' ')
+        sys.stdout.write('\n')
+    print('Score:', game_state['score'])
+
+def handle_input(game_state):
+    if kbhit():
+        key = getch()
+        if key == 'w' and game_state['direction'] != 'DOWN':
+            game_state['direction'] = 'UP'
+        elif key == 's' and game_state['direction'] != 'UP':
+            game_state['direction'] = 'DOWN'
+        elif key == 'a' and game_state['direction'] != 'RIGHT':
+            game_state['direction'] = 'LEFT'
+        elif key == 'd' and game_state['direction'] != 'LEFT':
+            game_state['direction'] = 'RIGHT'
+        elif key == 'p':
+            game_state['paused'] = not game_state['paused']  # Toggle pause
+
