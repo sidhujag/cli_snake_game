@@ -56,26 +56,23 @@ class Game:
             with input_handler as ih:
                 while True:
                     # Render the game state
-                    try:
-                        renderer.render()
-                    except Exception as e:
-                        print(f"Render error: {e}")
-                        break
+                    renderer.render()
 
                     # Read input
-                    try:
-                        key = ih.read_input()
-                        if key:
-                            self.change_direction(key)
-                    except Exception as e:
-                        print(f"Input error: {e}")
-                        break
+                    key = ih.read_input()
+                    if key:
+                        self.change_direction(key)
 
                     # Move the snake
                     self.move_snake()
 
                     # Check for collisions
                     if self.check_collision():
+                        renderer.game_over()
+                        break
+
+                    # Sleep to control game speed
+                    time.sleep(renderer.game_speed)
                         renderer.game_over()
                         renderer.game_over()
                         break
