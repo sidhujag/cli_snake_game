@@ -9,3 +9,6 @@ User Stories:
 4. As a busy individual, I want the ability to pause and resume the game, so that I can handle interruptions without losing my progress.
 
 5. As a gamer who enjoys progression, I want the game to save my high score, so that I can have a long-term goal to work towards.
+6. As a player, I want to see my score update in real-time as I play the game, so that I can get immediate feedback on my performance.
+7. As a user with frequent interruptions, I want to be able to pause and resume my game, so that I can manage my time and breaks without losing my progress.
+8. As a competitive player, I want the game to remember and display my high score even after I close the game, so that I can have a record of my achievements and motivation to improve.
