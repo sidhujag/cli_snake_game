@@ -1,4 +1,5 @@
 import random
+import random
 class Game:
     def __init__(self, width, height):
         self.width = width
@@ -48,6 +49,29 @@ class Game:
     def update_score(self):
         self.score += 1
 
-    def run(self):
-        # Main game loop
-        pass
+    def run(self, input_handler, renderer):
+        from time import sleep
+
+        try:
+            with input_handler as ih:
+                while True:
+                    # Render the game state
+                    renderer.render()
+
+                    # Read input
+                    key = ih.read_input()
+                    if key:
+                        self.change_direction(key)
+
+                    # Move the snake
+                    self.move_snake()
+
+                    # Check for collisions
+                    if self.check_collision():
+                        renderer.game_over()
+                        break
+
+                    # Sleep to control game speed
+                    sleep(0.1)
+        finally:
+            ih.restore_input()
