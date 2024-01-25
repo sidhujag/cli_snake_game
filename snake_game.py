@@ -444,3 +444,54 @@ def main(stdscr):
         stdscr.addch(snake[0][0], snake[0][1], '#')
 
 curses.wrapper(main)
+import random
+
+# Define the possible directions
+DIRECTIONS = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+
+# Initialize the game state
+def initialize_game(width=30, height=20):
+    snake = [(width // 2, height // 2)]
+    food = create_food(snake, width, height)
+    direction = 'RIGHT'
+    return {'snake': snake, 'food': food, 'direction': direction, 'width': width, 'height': height, 'game_over': False}
+
+# Function to get a keypress
+def create_food(snake, width, height):
+    while True:
+        food = (random.randint(1, width - 2), random.randint(1, height - 2))
+        if food not in snake:
+            return food
+
+# Function to update the game state
+def move_snake(game_state):
+    head_x, head_y = game_state['snake'][0]
+    delta_x, delta_y = DIRECTIONS[game_state['direction']]
+    new_head = (head_x + delta_x, head_y + delta_y)
+    game_state['snake'].insert(0, new_head)
+    if new_head == game_state['food']:
+        game_state['food'] = create_food(game_state['snake'], game_state['width'], game_state['height'])
+    else:
+        game_state['snake'].pop()
+
+def check_collision(game_state):
+    head = game_state['snake'][0]
+    # Check if the snake has hit the wall
+    if head[0] <= 0 or head[0] >= game_state['width'] - 1 or head[1] <= 0 or head[1] >= game_state['height'] - 1:
+        game_state['game_over'] = True
+    # Check if the snake has hit itself
+    if head in game_state['snake'][1:]:
+        game_state['game_over'] = True
+
+def main():
+    game_state = initialize_game()
+    while not game_state['game_over']:
+        move_snake(game_state)
+        check_collision(game_state)
+        # TODO: Implement rendering and input handling
+        # render_game_state(game_state)
+        # handle_input(game_state)
+    print("Game Over!")
+
+if __name__ == "__main__":
+    main()
