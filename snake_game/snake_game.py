@@ -16,13 +16,13 @@ def main(stdscr):
 
     sh, sw = stdscr.getmaxyx()
     box = [[3,3], [sh-3, sw-3]]
-    snake = [[sh//2, sw//2 + 1], [sh//2, sw//2], [sh//2, sw//2 - 1]]
+    snake = [[sh//2, sw//2]]
     direction = curses.KEY_RIGHT
 
     for y, x in box:
         stdscr.addch(y, x, '+')
 
-    food = create_food(snake, box)
+    food = create_food(snake, box)  # Initial food placement
     stdscr.addch(food[0], food[1], '#')
 
     score = 0
@@ -46,7 +46,7 @@ def main(stdscr):
 
         if snake[0] == food:
             score += 1
-            food = create_food(snake, box)
+            food = create_food(snake, box)  # Place new food
             stdscr.addch(food[0], food[1], '#')
         else:
             tail = snake.pop()
