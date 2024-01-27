@@ -47,6 +47,10 @@ def handle_input(game_state, key):
         curses.KEY_DOWN: 'DOWN',
         curses.KEY_LEFT: 'LEFT',
         curses.KEY_RIGHT: 'RIGHT',
+        ord('w'): 'UP',
+        ord('s'): 'DOWN',
+        ord('a'): 'LEFT',
+        ord('d'): 'RIGHT',
     }
     if key in key_to_direction:
         current_direction = game_state['direction']
